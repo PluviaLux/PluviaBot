@@ -6,10 +6,11 @@ const {loadCommands} = require("./commands.js");
 const client = new Client({
     intents: [
         Intents.FLAGS.GUILDS,
-        Intents.FLAGS.GUILD_MESSAGES,
         Intents.FLAGS.GUILD_BANS,
-        Intents.FLAGS.GUILD_MESSAGES
-    ]
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_MESSAGE_REACTIONS
+    ],
+    partials: ['MESSAGE', 'CHANNEL', 'REACTION']
 });
 
 
@@ -28,8 +29,27 @@ client.on('messageCreate', (message) => {
     let command = messageArray[0];
     let args = messageArray.slice(1);
     let commandFile = client.commands.get(command.slice(config.prefix.length));
-    if (!message.member.permissions.has(commandFile.userPermissions)) return message.channel.send("You don't have enought permissions.")
-    if (commandFile) commandFile.run(client, message, args)
+    if (!commandFile) return
+    if (!message.member.permissions.has(commandFile.userPermissions)) return message.channel.send("You don't have enough permissions.")
+    commandFile.run(client, message, args)
 });
+
+if (config.reactions) {
+    client.on('messageReactionAdd', (reaction, user) => {
+        let roleId = config.reactions.roles[reaction.emoji.id] || config.reactions.roles[reaction.emoji.name];
+        if (roleId && reaction.message.id === config.reactions.message_id) {
+            reaction.message.guild.members.fetch(user)
+                .then(member => member.roles.add(roleId));
+        }
+    });
+
+    client.on('messageReactionRemove', (reaction, user) => {
+        let roleId = config.reactions.roles[reaction.emoji.id] || config.reactions.roles[reaction.emoji.name];
+        if (roleId && reaction.message.id === config.reactions.message_id) {
+            reaction.message.guild.members.fetch(user)
+                .then(member => member.roles.remove(roleId));
+        }
+    })
+}
 
 client.login(config.token);
