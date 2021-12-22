@@ -1,7 +1,13 @@
 const {Client, Collection, Intents} = require("discord.js");
 const config = require("./config.json");
+const reactionRoles = require("./reaction-roles.json")
 
 const {loadCommands} = require("./commands.js");
+
+if (!config.token) {
+    console.log("Please add token to config.json");
+    process.exit();
+}
 
 const client = new Client({
     intents: [
@@ -13,12 +19,6 @@ const client = new Client({
     partials: ['MESSAGE', 'CHANNEL', 'REACTION']
 });
 
-
-if(!config.token) {
-    console.log("Please add token to config.json");
-    process.exit();
-}
-
 client.commands = new Collection();
 
 loadCommands(client);
@@ -29,27 +29,27 @@ client.on('messageCreate', (message) => {
     let command = messageArray[0];
     let args = messageArray.slice(1);
     let commandFile = client.commands.get(command.slice(config.prefix.length));
-    if (!commandFile) return
-    if (!message.member.permissions.has(commandFile.userPermissions)) return message.channel.send("You don't have enough permissions.")
+    if (!commandFile) return;
+    if (!message.member.permissions.has(commandFile.userPermissions)) return message.channel.send("You don't have enough permissions.");
     commandFile.run(client, message, args)
 });
 
-if (config.reactions) {
+if (reactionRoles) {
     client.on('messageReactionAdd', (reaction, user) => {
-        let roleId = config.reactions.roles[reaction.emoji.id] || config.reactions.roles[reaction.emoji.name];
-        if (roleId && reaction.message.id === config.reactions.message_id) {
+        let roleId = reactionRoles.roles[reaction.emoji.id] || reactionRoles.roles[reaction.emoji.name];
+        if (roleId && reaction.message.id === reactionRoles.message_id) {
             reaction.message.guild.members.fetch(user)
                 .then(member => member.roles.add(roleId));
         }
     });
 
     client.on('messageReactionRemove', (reaction, user) => {
-        let roleId = config.reactions.roles[reaction.emoji.id] || config.reactions.roles[reaction.emoji.name];
-        if (roleId && reaction.message.id === config.reactions.message_id) {
+        let roleId = reactionRoles.roles[reaction.emoji.id] || reactionRoles.roles[reaction.emoji.name];
+        if (roleId && reaction.message.id === reactionRoles.message_id) {
             reaction.message.guild.members.fetch(user)
                 .then(member => member.roles.remove(roleId));
         }
-    })
+    });
 }
 
 client.login(config.token);

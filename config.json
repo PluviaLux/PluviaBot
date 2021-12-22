@@ -1,8 +1,4 @@
 {
     "token": "",
-    "prefix": "!",
-    "reactions": {
-        "message_id": "",
-        "roles": {}
-    }
+    "prefix": "!"
 }
