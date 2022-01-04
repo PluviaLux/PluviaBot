@@ -8,7 +8,7 @@ module.exports = {
     userPermissions: [discord.Permissions.FLAGS.MODERATE_MEMBERS],
     botPermissions: [discord.Permissions.FLAGS.MODERATE_MEMBERS],
     run: async (client, message, args) => {
-        const target = message.mentions.members.first() || message.guild.users.cache.get(args[0]);
+        const target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
         let embed = new discord.MessageEmbed()
             .setTitle('Timeout user')

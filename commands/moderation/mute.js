@@ -17,7 +17,7 @@ module.exports = {
 
         amount *= parseInt(args[1]) || 1;
 
-        const target = message.mentions.members.first() || message.guild.users.cache.get(args[0]);
+        const target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
         if (target.id === message.author.id) return message.channel.send(`Mute yourself?`);
         if (target.id === message.guild.ownerId) return message.channel.send(`You can't mute server owner.`);
 

@@ -10,7 +10,7 @@ module.exports = {
     run: async (client, message, args) => {
         let reason = args.slice(1).join(" ") || "Reason unspecified.";
 
-        const target = message.mentions.members.first() || message.guild.users.cache.get(args[0]);
+        const target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
         if (!target) return message.channel.send(`Usage of the command: ${this.usage}`);
 
