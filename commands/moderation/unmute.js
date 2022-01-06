@@ -10,6 +10,8 @@ module.exports = {
     run: async (client, message, args) => {
         const target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
+        if(!target) return message.channel.send(`Usage of the command: ${this.usage}`);
+
         let embed = new discord.MessageEmbed()
             .setTitle('Timeout user')
             .setDescription(`${target} (id ${target.id}) unmuted by ${message.author}`)
