@@ -23,6 +23,6 @@ module.exports = {
             .addField("Reason:", reason)
             .setColor("F24D11")
             .setThumbnail(target.displayAvatarURL());
-        await target.kick(reason).then(() => message.channel.send({embeds: [embed]}));
+        await target.kick(reason).then(() => message.channel.send({embeds: [embed]})).catch(() => message.channel.send("An error occurred, cannot kick user. Make sure that bot have enough permissions."));
     }
 };

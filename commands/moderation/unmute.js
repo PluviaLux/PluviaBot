@@ -17,6 +17,6 @@ module.exports = {
             .setDescription(`${target} (id ${target.id}) unmuted by ${message.author}`)
             .setColor("F24D11")
             .setThumbnail(target.displayAvatarURL());
-        await target.timeout(null).then(() => message.channel.send({embeds: [embed]}));
+        await target.timeout(null).then(() => message.channel.send({embeds: [embed]})).catch(() => message.channel.send("An error occurred, cannot remove tumeout user. Make sure that bot have enough permissions."));
     }
 };

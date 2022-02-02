@@ -31,6 +31,6 @@ module.exports = {
             .addField("Until:", `<t:${Math.round((Date.now() + amount) / 1000)}>`)
             .setColor("F24D11")
             .setThumbnail(target.displayAvatarURL());
-        await target.timeout(amount, reason).then(() => message.channel.send({embeds: [embed]}));
+        await target.timeout(amount, reason).then(() => message.channel.send({embeds: [embed]})).catch(() => message.channel.send("An error occurred, cannot timeout user. Make sure that bot have enough permissions."));
     }
 };

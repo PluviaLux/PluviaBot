@@ -23,6 +23,6 @@ module.exports = {
             .addField("Reason:", reason)
             .setColor("F24D11")
             .setThumbnail(target.displayAvatarURL());
-        await message.guild.bans.create(target, {reason: reason}).then(() => message.channel.send({embeds: [embed]}));
+        await message.guild.bans.create(target, {reason: reason}).then(() => message.channel.send({embeds: [embed]})).catch(() => message.channel.send("An error occurred, cannot ban user. Make sure that bot have enough permissions."));
     }
 };
